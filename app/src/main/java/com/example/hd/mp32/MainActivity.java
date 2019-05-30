@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     ListView mylist;
     List<Song> list;
 
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,9 +195,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     @Override
     public void onClick(View v) {
 
-
-        //依靠DatabaseHelper的构造函数创建数据库
-        DatabaseHelper dbHelper = new DatabaseHelper(MainActivity.this, "test_db",null,1);
+        dbHelper = DatabaseHelper.getInstance(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         //根据响应Click的按钮id进行选择操作
@@ -240,13 +239,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             //查询全部按钮
             case R.id.btnnext:
                 //创建游标对象
-                Cursor cursor = db.query("user", new String[]{"name"}, null, null, null, null, null);
+                Cursor cursor = db.rawQuery("select * from music",null);
                 //利用游标遍历所有数据对象
                 //为了显示全部，把所有对象连接起来，放到TextView中
                 String textview_data = "";
                 while(cursor.moveToNext()){
-                    String name = cursor.getString(cursor.getColumnIndex("name"));
-                    textview_data = textview_data + "\n" + name;
+                    String song= cursor.getString(cursor.getColumnIndex("song"));
+                    textview_data = textview_data + "\n" + song;
                 }
                 System.out.println(textview_data);
 //                Log.e("ok",textview_data);
