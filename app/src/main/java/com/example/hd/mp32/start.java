@@ -70,13 +70,18 @@ public class start extends AppCompatActivity {
             while (cursor.moveToNext()) {
 
                 String song = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
-                String singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
-                String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                int duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-                float size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
+//判断是否重复
+                Cursor cursor1 = db.rawQuery("select * from music where song=?", new String[]{song});
+                if(!cursor1.moveToNext()) {
+                    String singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
+                    String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                    int duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+                    long size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
 
-                db.execSQL("insert into music(song,singer,path,duration,size) values(?,?,?,?,?)", new Object[]{song,singer,path,duration,size,});
-
+                    if(size> 1000 * 800) {
+                        db.execSQL("insert into music(song,singer,path,duration,size) values(?,?,?,?,?)", new Object[]{song, singer, path, duration, size,});
+                    }
+                }
             }
         }
 

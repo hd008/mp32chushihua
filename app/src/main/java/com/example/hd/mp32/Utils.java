@@ -21,13 +21,14 @@ public class Utils {
 
 
 
+        dbHelper = DatabaseHelper.getInstance(context);//数据库传递 context
 
         list = new ArrayList<>();
 
  //Int size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
-
+        //查询数据库
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from student order by id", null);
+        Cursor cursor = db.rawQuery("select * from music order by song", null);
         while (cursor.moveToNext()) {
 
             song = new Song();
@@ -43,17 +44,17 @@ public class Utils {
                     String[] str = song.song.split("-");
                     song.singer = str[0];
                     song.song = str[1];
-                }}
+                }
+                list.add(song);
+            }
 
-            list.add(song);
 
-//测试 修改了一次
+
         }
 
 
 
 
-        cursor.close();
         cursor.close();
 
         return list;
