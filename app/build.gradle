@@ -9,6 +9,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        compileOptions {
+
+            sourceCompatibility JavaVersion.VERSION_1_8
+
+            targetCompatibility JavaVersion.VERSION_1_8
+
+        }
     }
     buildTypes {
         release {
@@ -16,6 +23,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -25,4 +33,17 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+//添加okhttp依赖
+    implementation("com.squareup.okhttp3:okhttp:3.14.2")
+//添加gson依赖
+    implementation 'com.google.code.gson:gson:2.8.1'
+//<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+//<dependency>
+//    <groupId>com.alibaba</groupId>
+//    <artifactId>fastjson</artifactId>
+//    <version>1.2.58</version>
+//</dependency>  下次这样添加依赖
+    implementation 'com.alibaba:fastjson:1.1.54.android'
+
+
 }
