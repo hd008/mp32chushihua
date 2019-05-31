@@ -2,6 +2,7 @@ package com.example.hd.mp32;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         MyAdapter myAdapter = new MyAdapter(this, list);//list 音乐信息
 
+        System.out.println(list);
+
         mylist.setAdapter(myAdapter);
 
         mylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -82,11 +85,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             }
         });
 
+
+
+        Button more=findViewById(R.id.more);
         Button play=(Button)findViewById(R.id.btnplay);
         Button next=(Button)findViewById(R.id.btnnext);
         Button stop=findViewById(R.id.btnstop);
 
-
+        more.setOnClickListener(this);
         next.setOnClickListener(this);
         play.setOnClickListener(this);
         stop.setOnClickListener(this);
@@ -251,6 +257,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 //                Log.e("ok",textview_data);
 //                textview.setText(textview_data);
                 break;
+            case R.id.more:
+                Intent intent =new Intent(this,findMusic.class);
+                startActivity(intent);
 
             default:
                 break;
