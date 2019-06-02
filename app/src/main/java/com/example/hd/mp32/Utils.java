@@ -45,6 +45,7 @@ public class Utils {
                     song.singer = str[0];
                     song.song = str[1];
                 }
+                //System.out.println(song.toString());
                 list.add(song);
             }
 
