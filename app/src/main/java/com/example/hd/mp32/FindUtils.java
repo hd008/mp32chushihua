@@ -25,7 +25,7 @@ public class FindUtils {
     public static DownSong song;
 
 
-    public static List<DownSong> getfindmusic(Context context) {
+    public static List<DownSong> getfindmusic(Context context,String name) {
 
         list = new ArrayList<>();
 
@@ -34,7 +34,7 @@ public class FindUtils {
 
             OkHttpClient okHttpClient  = new OkHttpClient.Builder()
                     .build();
-            RequestBody body = new FormBody.Builder().add("input","123")
+            RequestBody body = new FormBody.Builder().add("input",name)
                     .add("filter","name")
                     .add("type","netease")
                     .add("page","1").build();
@@ -91,13 +91,13 @@ public class FindUtils {
                         //System.out.println("author"+music.get("author"));
 
                         song = new DownSong();
-                        song.song="123";
+                        song.song=music.getString("title");
                         song.author=music.getString("author");
                         song.down_url=music.getString("url");
                         song.lrc=music.getString("lrc");
                         System.out.println(song.author);
-                        System.out.println(song.down_url);
-                        System.out.println(song.lrc);
+//                        System.out.println(song.down_url);
+//                        System.out.println(song.lrc);
                         list.add(song);
                     }
 

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 }
             }
         }
+
+
 
 
         super.onCreate(savedInstanceState);

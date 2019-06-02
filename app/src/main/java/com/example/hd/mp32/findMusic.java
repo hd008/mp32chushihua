@@ -1,6 +1,12 @@
 package com.example.hd.mp32;
 
+import android.Manifest;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,7 +26,13 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +46,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.BufferedSink;
+import okio.Okio;
+import okio.Sink;
 
 
 public class findMusic extends AppCompatActivity  {
@@ -46,6 +61,19 @@ public class findMusic extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            int REQUEST_CODE_CONTACT = 101;
+            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            //验证是否许可权限
+            for (String str : permissions) {
+                if (this.checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
+                    //申请权限
+                    this.requestPermissions(permissions, REQUEST_CODE_CONTACT);
+                    return;
+                }
+            }
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_music);
 
@@ -55,16 +83,17 @@ public class findMusic extends AppCompatActivity  {
         mylist = findViewById(R.id.findlist);
         list = new ArrayList<>();
 
-        list = FindUtils.getfindmusic(findMusic.this);
-        FindAdapter findAdapter= new FindAdapter(this,list);
-        mylist.setAdapter(findAdapter);
+
 
         find_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name_ = name.getText().toString();
                 if(!TextUtils.isEmpty(name_)){
-                    click();
+                    list = FindUtils.getfindmusic(findMusic.this,name_);
+                    FindAdapter findAdapter= new FindAdapter(findMusic.this,list);
+                    mylist.setAdapter(findAdapter);
+                    //click(name_);
                     //http3();
                     Toast.makeText(findMusic.this,name_,Toast.LENGTH_SHORT).show();
 
@@ -79,17 +108,19 @@ public class findMusic extends AppCompatActivity  {
         mylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {//单击列 响应
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String p = list.get(position).down_url;//获得歌曲的下载地址
-                System.out.println(p);
+                String down_url = list.get(position).down_url;//获得歌曲的下载地址
+                System.out.println(down_url);
+                String name=list.get(position).song;
+                String author=list.get(position).author;
+                downloadFile3(name,author,down_url);
             }
         });
 
     }
-    public void click(){//点击fid 响应
-        list = FindUtils.getfindmusic(findMusic.this);
+    public void click(String name){//点击fid 响应
+        list = FindUtils.getfindmusic(findMusic.this,name);
         FindAdapter findAdapter= new FindAdapter(findMusic.this,list);
         mylist.setAdapter(findAdapter);
-
 
     }
     class FindAdapter extends BaseAdapter{
@@ -153,77 +184,57 @@ public class findMusic extends AppCompatActivity  {
         }
     }
 
-//public void http3(){
-//    OkHttpClient okHttpClient  = new OkHttpClient.Builder()
-//            .build();
-//    RequestBody body = new FormBody.Builder().add("input","123")
-//            .add("filter","name")
-//            .add("type","netease")
-//            .add("page","1").build();
-////        Musicpost musicpost = new Musicpost("good","name","netease",1);
-////        //使用Gson 添加 依赖 compile 'com.google.code.gson:gson:2.8.1'
-////        Gson gson = new Gson();
-////        //使用Gson将对象转换为json字符串
-////        String json = gson.toJson(musicpost);
-////        System.out.println(json);
-////
-////        //MediaType  设置Content-Type 标头中包含的媒体类型值
-////        RequestBody requestBody = FormBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=utf-8")
-////                , json);
-//
-//    Request request = new Request.Builder()
-//            .url("http://music.bload.cn/")//请求的url
-//            .addHeader(    "X-Requested-With","XMLHttpRequest")
-//            .post(body)
-//            .build();
-//
-//    //创建/Call
-//    Call call = okHttpClient.newCall(request);
-//    //加入队列 异步操作
-//    call.enqueue(new Callback() {
-//        //请求错误回调方法
-//        @Override
-//        public void onFailure(Call call, IOException e) {
-//            System.out.println("连接失败");
-//        }
-//        @Override
-//        public void onResponse(Call call, Response response) throws IOException {
-//            // System.out.println(response.body().string());
-//            String json = response.body().string();
-//
-//            //JSONObject 表示形式 {"key" : "value"}
-//            //
-//            //JSONArray 表示形式  [{"key" : "value"},{"key" : "value"},{"key" : "value"}]，JSONArray里面包含多个JSONObject
-//            //
-//            //访问时通过 JSONObject对象去访问，使用 jsonObject.getXXX("key")得到相应的值
-//            //
-//            //一般解析JSON都使用这两个。
-//            JSONObject jsonObject = JSONObject.parseObject(json);//{"data":[{"type":"netease","link":"http:\/\/music.163.com\/#\/so
-//
-//            //System.out.println(jsonObject);
-//
-////                     String a=jsonObject.getJSONArray("data").get(1).toString();
-////                    System.out.println(a);
-//
-//            String data=jsonObject.get("data").toString();//获得data [{"xxx":"xxx"...},{},{}] 转为string
-//
-//            JSONArray array = JSONArray.parseArray(data);//转为数组
-//            System.out.println(array.get(0));//{"xxx":"xxx"...}
-//
-////                    for(int i=0;i<10;i++){
-////
-////                        JSONObject music = jsonObject.parseObject(array.get(i).toString());
-////                        System.out.println("author"+music.get("author"));
-////
-////                        song = new DownSong();
-////                        song.author=music.get("author").toString();
-////                        song.down_url=music.getString("")
-////                    }
-//
-//        }
-//    });
-//
-//}
+
+
+
+    private void downloadFile3(String name,String author,String down_url){
+        //下载路径，如果路径无效了，可换成你的下载路径
+         String url =  down_url;
+         long startTime = System.currentTimeMillis();
+        Log.i("DOWNLOAD","startTime="+startTime);
+
+        Request request = new Request.Builder().url(url).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 下载失败
+                e.printStackTrace();
+                Log.i("DOWNLOAD","download failed");
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Sink sink = null;
+                BufferedSink bufferedSink = null;
+                try {
+                    String mSDCardPath= Environment.getExternalStorageDirectory().getAbsolutePath()+"/hd_music";
+
+                    File destDir = new File(mSDCardPath);
+                    if(!destDir.exists()){
+                        destDir.mkdirs();
+                    }
+                    System.out.println("路径"+mSDCardPath);
+                    File dest = new File(mSDCardPath,author+"-"+name+".mp3");
+
+                    System.out.println(dest.getAbsolutePath());
+                    sink = Okio.sink(dest);
+                    bufferedSink = Okio.buffer(sink);
+                    bufferedSink.writeAll(response.body().source());
+
+                    bufferedSink.close();
+                    Log.i("DOWNLOAD","download success");
+                    Log.i("DOWNLOAD","totalTime="+ (System.currentTimeMillis() - startTime));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i("DOWNLOAD","download failed");
+                } finally {
+                    if(bufferedSink != null){
+                        bufferedSink.close();
+                    }
+
+                }
+            }
+        });
+    }
 
 
 
