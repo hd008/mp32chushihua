@@ -1,6 +1,8 @@
 package com.example.hd.mp32;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -23,6 +25,8 @@ public class FindUtils {
     public static List<DownSong> list;
 
     public static DownSong song;
+
+    private static DatabaseHelper dbHelper;
 
 
     public static List<DownSong> getfindmusic(Context context,String name) {
@@ -85,7 +89,7 @@ public class FindUtils {
 
 
 
-                    for(int i=0;i<4;i++){
+                    for(int i=0;i<10;i++){
 
                         JSONObject music = jsonObject.parseObject(a.get(i).toString());//2.{"xxx":"xxx"...}
                         //System.out.println("author"+music.get("author"));
@@ -95,7 +99,7 @@ public class FindUtils {
                         song.author=music.getString("author");
                         song.down_url=music.getString("url");
                         song.lrc=music.getString("lrc");
-                        System.out.println(song.author);
+                       // System.out.println(song.author);
 //                        System.out.println(song.down_url);
 //                        System.out.println(song.lrc);
                         list.add(song);
@@ -109,5 +113,31 @@ public class FindUtils {
 
         return list;
     }
+
+    public static void uptosql(Context context,String name,String author,String path) {
+
+
+
+        dbHelper = DatabaseHelper.getInstance(context);//数据库传递 context
+
+
+        //Int size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
+        //查询数据库
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String song =name;
+//判断是否重复
+        Cursor cursor2 = db.rawQuery("select * from music where song=?", new String[]{song});
+        if(!cursor2.moveToNext()) {
+            String singer = "";
+            db.execSQL("insert into music(song,singer,path,duration,size) values(?,?,?,?,?)", new Object[]{song, singer,path,207073,3313702});
+            //放入数据库  但时常和大小未知
+            //  /storage/emulated/0/hd_music/Marian Hill-Good.mp3
+            //   duration 200620
+            //  size  3210388
+        }
+
+    }
+
 
 }

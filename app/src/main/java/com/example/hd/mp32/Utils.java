@@ -14,6 +14,7 @@ public class Utils {
     public static List<Song> list;
 
     public static Song song;
+
     private static DatabaseHelper dbHelper;
 
 
@@ -46,6 +47,9 @@ public class Utils {
                     song.song = str[1];
                 }
                 //System.out.println(song.toString());
+               // System.out.println(song.path);
+               // System.out.println(song.duration);
+               // System.out.println(song.size);
                 list.add(song);
             }
 

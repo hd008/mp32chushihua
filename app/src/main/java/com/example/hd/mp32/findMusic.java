@@ -3,6 +3,7 @@ package com.example.hd.mp32;
 import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -57,6 +58,7 @@ public class findMusic extends AppCompatActivity  {
 
     ListView mylist;
     List<DownSong> list;
+
 
 
     @Override
@@ -221,8 +223,13 @@ public class findMusic extends AppCompatActivity  {
                     bufferedSink.writeAll(response.body().source());
 
                     bufferedSink.close();
+                    if(dest.exists()){
                     Log.i("DOWNLOAD","download success");
                     Log.i("DOWNLOAD","totalTime="+ (System.currentTimeMillis() - startTime));
+                    FindUtils.uptosql(findMusic.this,name,author,dest.getAbsolutePath());
+                        Intent intent = new Intent(findMusic.this,MainActivity.class);
+                        startActivity(intent);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i("DOWNLOAD","download failed");
