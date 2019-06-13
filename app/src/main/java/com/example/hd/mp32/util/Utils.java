@@ -1,10 +1,11 @@
-package com.example.hd.mp32;
+package com.example.hd.mp32.util;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.MediaStore;
-import android.util.Log;
+
+import com.example.hd.mp32.bean.Song;
+import com.example.hd.mp32.dao.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.hd.mp32;
+package com.example.hd.mp32.bean;
 
 public class Song {
 

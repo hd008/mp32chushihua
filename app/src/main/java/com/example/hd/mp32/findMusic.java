@@ -1,16 +1,13 @@
 package com.example.hd.mp32;
 
 import android.Manifest;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,28 +21,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.example.hd.mp32.bean.DownSong;
+import com.example.hd.mp32.util.FindUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.BufferedSink;
 import okio.Okio;
@@ -90,20 +79,21 @@ public class findMusic extends AppCompatActivity  {
         find_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name_ = name.getText().toString();
-                if(!TextUtils.isEmpty(name_)){
-                    list = FindUtils.getfindmusic(findMusic.this,name_);
-                    FindAdapter findAdapter= new FindAdapter(findMusic.this,list);
-                    mylist.setAdapter(findAdapter);
-                    //click(name_);
-                    //http3();
-                    Toast.makeText(findMusic.this,name_,Toast.LENGTH_SHORT).show();
+                    String name_ = name.getText().toString();
+                    if (!name_.isEmpty()) {
+                        list = FindUtils.getfindmusic(findMusic.this, name_);
+                        FindAdapter findAdapter = new FindAdapter(findMusic.this, list);
+                        mylist.setAdapter(findAdapter);
+                       // findAdapter.notifyDataSetChanged();
+                        //click(name_);
+                        //http3();
+                        Toast.makeText(findMusic.this, name_, Toast.LENGTH_SHORT).show();
 
-                }
-                else {
-                    Toast.makeText(findMusic.this, "歌名不能为空", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(findMusic.this, "歌名不能为空", Toast.LENGTH_SHORT).show();
 
-                }
+                    }
+
 
             }
         });
@@ -115,16 +105,15 @@ public class findMusic extends AppCompatActivity  {
                 String name=list.get(position).song;
                 String author=list.get(position).author;
                 downloadFile3(name,author,down_url);
+
+                String lrc=list.get(position).lrc;
+                System.out.println(lrc);
+                downloadFile3_lrc(name,author,lrc);
             }
         });
 
     }
-    public void click(String name){//点击fid 响应
-        list = FindUtils.getfindmusic(findMusic.this,name);
-        FindAdapter findAdapter= new FindAdapter(findMusic.this,list);
-        mylist.setAdapter(findAdapter);
 
-    }
     class FindAdapter extends BaseAdapter{
 
         Context context;
@@ -190,7 +179,7 @@ public class findMusic extends AppCompatActivity  {
 
 
     private void downloadFile3(String name,String author,String down_url){
-        //下载路径，如果路径无效了，可换成你的下载路径
+        //下载路径
          String url =  down_url;
          long startTime = System.currentTimeMillis();
         Log.i("DOWNLOAD","startTime="+startTime);
@@ -241,6 +230,27 @@ public class findMusic extends AppCompatActivity  {
                 }
             }
         });
+    }
+    private void downloadFile3_lrc(String name,String author,String content){
+        String mSDCardPath= Environment.getExternalStorageDirectory().getAbsolutePath()+"/hd_music";
+
+        File destDir = new File(mSDCardPath);
+        if(!destDir.exists()){
+            destDir.mkdirs();
+        }
+        System.out.println("路径"+mSDCardPath);
+        File dest = new File(mSDCardPath,author+"-"+name+".lrc");
+
+        System.out.println(dest.getAbsolutePath());
+
+        try {
+            dest.createNewFile();
+            FileOutputStream out=new FileOutputStream(dest,true);
+            out.write(content.getBytes("UTF-8"));
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

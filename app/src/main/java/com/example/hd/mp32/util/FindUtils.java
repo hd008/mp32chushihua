@@ -1,4 +1,4 @@
-package com.example.hd.mp32;
+package com.example.hd.mp32.util;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.hd.mp32.bean.DownSong;
+import com.example.hd.mp32.dao.DatabaseHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ public class FindUtils {
                     .build();
             RequestBody body = new FormBody.Builder().add("input",name)
                     .add("filter","name")
-                    .add("type","netease")
+                    .add("type","qq")
                     .add("page","1").build();
 //        Musicpost musicpost = new Musicpost("good","name","netease",1);
 //        //使用Gson 添加 依赖 compile 'com.google.code.gson:gson:2.8.1'
@@ -54,7 +56,7 @@ public class FindUtils {
 //                , json);
 
             Request request = new Request.Builder()
-                    .url("http://music.bload.cn/")//请求的url
+                    .url("http://music.bbbbbb.me/")//请求的url
                     .addHeader(    "X-Requested-With","XMLHttpRequest")
                     .post(body)
                     .build();

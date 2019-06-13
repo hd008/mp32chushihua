@@ -1,7 +1,6 @@
 package com.example.hd.mp32;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -10,6 +9,8 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.hd.mp32.dao.DatabaseHelper;
 
 
 public class start extends AppCompatActivity {

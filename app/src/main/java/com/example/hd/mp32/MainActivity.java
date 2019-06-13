@@ -7,10 +7,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -18,21 +16,20 @@ import android.widget.ListView;
 import java.io.IOException;
 import java.util.List;
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import java.util.ArrayList;
 import android.media.MediaPlayer;
+
+import com.example.hd.mp32.bean.Song;
+import com.example.hd.mp32.dao.DatabaseHelper;
+import com.example.hd.mp32.util.Utils;
 
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
