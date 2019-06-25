@@ -45,14 +45,6 @@
             <!--layout_alignparentbottom上级必须是RelativeLayout-->
 
 
-
-            <Button
-                android:id="@+id/btnstop"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="stop" />
-
             <Button
                 android:id="@+id/btnnext"
                 android:layout_width="0dp"
@@ -60,12 +52,6 @@
                 android:layout_weight="1"
                 android:text="next" />
 
-            <Button
-                android:id="@+id/btnplay"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="play" />
         </LinearLayout>
 
 

@@ -87,7 +87,7 @@ public class findMusic extends AppCompatActivity  {
                        // findAdapter.notifyDataSetChanged();
                         //click(name_);
                         //http3();
-                        Toast.makeText(findMusic.this, name_, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(findMusic.this, name_+"正在查找哦", Toast.LENGTH_SHORT).show();
 
                     } else {
                         Toast.makeText(findMusic.this, "歌名不能为空", Toast.LENGTH_SHORT).show();
@@ -100,6 +100,7 @@ public class findMusic extends AppCompatActivity  {
         mylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {//单击列 响应
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(findMusic.this,"正在下载 即将跳转",Toast.LENGTH_SHORT).show();
                 String down_url = list.get(position).down_url;//获得歌曲的下载地址
                 System.out.println(down_url);
                 String name=list.get(position).song;
@@ -216,8 +217,9 @@ public class findMusic extends AppCompatActivity  {
                     Log.i("DOWNLOAD","download success");
                     Log.i("DOWNLOAD","totalTime="+ (System.currentTimeMillis() - startTime));
                     FindUtils.uptosql(findMusic.this,name,author,dest.getAbsolutePath());
-                        Intent intent = new Intent(findMusic.this,MainActivity.class);
-                        startActivity(intent);
+
+                        Intent intent = new Intent(findMusic.this,MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);//跳转到主页面
+                        startActivity(intent);//并且清空之前activity栈
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -87,6 +87,7 @@ public class start extends AppCompatActivity {
         }
 
         cursor.close();
+
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
 

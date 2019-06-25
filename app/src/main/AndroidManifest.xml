@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".findMusic"></activity>
+        <activity android:name=".play"></activity>
     </application>
 
 </manifest>

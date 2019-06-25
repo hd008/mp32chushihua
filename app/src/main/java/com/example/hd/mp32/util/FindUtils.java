@@ -116,7 +116,7 @@ public class FindUtils {
         return list;
     }
 
-    public static void uptosql(Context context,String name,String author,String path) {
+    public static void uptosql(Context context,String name,String singer,String path) {
 
 
 
@@ -131,8 +131,7 @@ public class FindUtils {
 //判断是否重复
         Cursor cursor2 = db.rawQuery("select * from music where song=?", new String[]{song});
         if(!cursor2.moveToNext()) {
-            String singer = "";
-            db.execSQL("insert into music(song,singer,path,duration,size) values(?,?,?,?,?)", new Object[]{song, singer,path,207073,3313702});
+            db.execSQL("insert into music(song,singer,path,duration,size) values(?,?,?,?,?)", new Object[]{song,singer,path,207073,3313702});
             //放入数据库  但时常和大小未知
             //  /storage/emulated/0/hd_music/Marian Hill-Good.mp3
             //   duration 200620

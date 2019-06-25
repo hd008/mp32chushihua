@@ -44,8 +44,17 @@ public class Utils {
             if (song.size > 1000 * 800) {
                 if (song.song.contains("-")) {
                     String[] str = song.song.split("-");
+                    System.out.println("str"+str.toString());
                     song.singer = str[0];
-                    song.song = str[1];
+
+                    if(str[1].contains(".")){
+                        System.out.println("str1"+str[1].toString());
+                        String[] str2=str[1].split("\\.");
+                        song.song=str2[0];
+                    }
+                   else {song.song = str[1];}
+
+
                 }
                 //System.out.println(song.toString());
                // System.out.println(song.path);

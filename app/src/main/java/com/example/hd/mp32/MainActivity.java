@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.view.View.OnClickListener;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.media.MediaPlayer;
 
@@ -33,10 +34,11 @@ import com.example.hd.mp32.util.Utils;
 
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
-    private MediaPlayer mediaPlayer = new MediaPlayer();
+    public MediaPlayer mediaPlayer = new MediaPlayer();
 
     ListView mylist;
     List<Song> list;
+    int count;
 
     private DatabaseHelper dbHelper;
 
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         list = Utils.getmusic(this);
 
+        count=list.size();
+
         MyAdapter myAdapter = new MyAdapter(this, list);//list 音乐信息
 
         System.out.println(list);
@@ -82,20 +86,22 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String p = list.get(i).path;//获得歌曲的地址
                 play(p);
+                String author = list.get(i).singer;
+                String name = list.get(i).song;
+                Intent intent = new Intent(MainActivity.this,play.class);
+                intent.putExtra("name",name);
+                intent.putExtra("singer",author);
+                startActivity(intent);
             }
         });
 
 
 
         Button more=findViewById(R.id.more);
-        Button play=(Button)findViewById(R.id.btnplay);
         Button next=(Button)findViewById(R.id.btnnext);
-        Button stop=findViewById(R.id.btnstop);
 
         more.setOnClickListener(this);
         next.setOnClickListener(this);
-        play.setOnClickListener(this);
-        stop.setOnClickListener(this);
 
     }
 
@@ -182,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             mediaPlayer.reset();
 //        调用方法传进播放地址
             mediaPlayer.setDataSource(path);
-//            异步准备资源，防止卡顿
+           // 异步准备资源，防止卡顿
             mediaPlayer.prepareAsync();
 //            调用音频的监听方法，音频准备完毕后响应该方法进行音乐播放
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -191,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                     mediaPlayer.start();
                 }
             });
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -206,60 +213,22 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         //根据响应Click的按钮id进行选择操作
         switch(v.getId()){
-            //插入数据按钮
-            case R.id.btnplay:
-                //创建存放数据的ContentValues对象
-                ContentValues values = new ContentValues();
-                values.put("name","aaa");
-                //数据库执行插入命令
-                db.insert("user", null, values);
-                break;
-            case R.id.btnstop:
-                //创建存放数据的ContentValues对象
-                ContentValues values1 = new ContentValues();
-                values1.put("name","123");
-                //数据库执行插入命令
-                db.insert("user", null, values1);
-                break;
-//            //插入数据按钮后面的清除按钮
-//            case R.id.insert_cleardata:
-//                insert_edittext.setText("");
-//                break;
-//
-//            //删除数据按钮
-//            case R.id.delete:
-//                db.delete("user", "name=?", new String[]{delete_data});
-//                break;
-//            //删除数据按钮后面的清除按钮
-//            case R.id.delete_cleardata:
-//                delete_edittext.setText("");
-//                break;
-//
-//            //更新数据按钮
-//            case R.id.update:
-//                ContentValues values2 = new ContentValues();
-//                values2.put("name", update_after_data);
-//                db.update("user", values2, "name = ?", new String[]{update_before_data});
-//                break;
 
-            //查询全部按钮
             case R.id.btnnext:
-                //创建游标对象
-                Cursor cursor = db.rawQuery("select * from music",null);
-                //利用游标遍历所有数据对象
-                //为了显示全部，把所有对象连接起来，放到TextView中
-                String textview_data = "";
-                while(cursor.moveToNext()){
-                    String song= cursor.getString(cursor.getColumnIndex("song"));
-                    textview_data = textview_data + "\n" + song;
-                }
-                System.out.println(textview_data);
-//                Log.e("ok",textview_data);
-//                textview.setText(textview_data);
+                Random random = new Random();
+                int i =random.nextInt(count);//随机数 少于list.size
+                String p = list.get(i).path;//获得歌曲的地址
+                play(p);
+                String author = list.get(i).singer;
+                String name = list.get(i).song;
+                Intent intent1 = new Intent(MainActivity.this,play.class);
+                intent1.putExtra("name",name);
+                intent1.putExtra("singer",author);
+                startActivity(intent1);
                 break;
             case R.id.more:
-                Intent intent =new Intent(this,findMusic.class);
-                startActivity(intent);
+                Intent intent2 =new Intent(this,findMusic.class);
+                startActivity(intent2);
 
             default:
                 break;
